@@ -1,26 +1,33 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TypeApplications #-}
 
 module Concrete.Set
-  ( Set
+  ( Set(..)
   , toList
   ) where
 
 import Prelude
 
-import Abstract.Set (IsSet(..))
+import Abstract.Set (IsSet(..), fromFoldable)
+import Test.QuickCheck (Arbitrary(..))
 
 data Set a = Empty | Node a (Set a) (Set a)
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
+instance (Ord a, Arbitrary a) => Arbitrary (Set a) where
+  arbitrary = fromFoldable @[] <$> arbitrary
+
+{-
 instance Show a => Show (Set a) where
   showsPrec d s =
     showParen (d > appPrec)
-    $ showString "fromList "
+    $ showString "fromFoldable "
     . showsPrec (appPrec + 1) (toList s)
    where
     appPrec = 10
+-}
 
 instance Ord a => IsSet Set a where
   empty :: Set a

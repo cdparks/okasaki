@@ -23,9 +23,21 @@ default-extensions:
 
 dependencies:
 - base >= 4.7 && < 5
+- QuickCheck
 
 library:
   source-dirs: src
+  ghc-options: -Wall -Werror
+
+executables:
+  chapter-02:
+    main: README.lhs
+    source-dirs: chapter-02
+    ghc-options: -pgmL markdown-unlit -threaded -O2 -with-rtsopts=-N
+    dependencies:
+      - okasaki
+      - hspec
+      - markdown-unlit
 
 tests:
   okasaki-test:
