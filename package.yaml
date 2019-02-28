@@ -1,0 +1,39 @@
+name:                okasaki
+version:             0.1.0.0
+github:              cdparks/okasaki
+license:             BSD3
+author:              Chris Parks
+maintainer:          chris@freckle.com
+copyright:           2019 Chris Parks
+
+extra-source-files:
+- README.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/cdparks/okasaki#readme>
+
+default-extensions:
+- NoImplicitPrelude
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+tests:
+  okasaki-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - okasaki
