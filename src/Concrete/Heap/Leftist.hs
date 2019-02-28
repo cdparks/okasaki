@@ -1,5 +1,5 @@
 {-# LANGUAGE InstanceSigs #-}
--- {-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeApplications #-}
 
 module Concrete.Heap.Leftist
   ( Heap(..)
@@ -10,23 +10,30 @@ module Concrete.Heap.Leftist
 
 import Prelude
 
-import Abstract.Heap (IsHeap(..))
+import Abstract.Heap (IsHeap(..), fromFoldable)
 import Data.List (unfoldr)
+import Test.QuickCheck (Arbitrary(..))
 
 data Heap a
   = Empty
   | Node {-# UNPACK #-} !Int a (Heap a) (Heap a)
-  deriving (Eq, Show, Ord)
 
-{-
-instance Show a => Show (Heap a) where
+instance (Ord a, Arbitrary a) => Arbitrary (Heap a) where
+  arbitrary = fromFoldable @[] <$> arbitrary
+
+instance Ord a => Eq (Heap a) where
+  lhs == rhs = toList lhs == toList rhs
+
+instance Ord a => Ord (Heap a) where
+  lhs `compare` rhs = toList lhs `compare` toList rhs
+
+instance (Ord a, Show a) => Show (Heap a) where
   showsPrec d s =
     showParen (d > appPrec)
     $ showString "fromFoldable "
     . showsPrec (appPrec + 1) (toList s)
    where
     appPrec = 10
--}
 
 instance IsHeap Heap where
   empty :: Ord a => Heap a
@@ -36,9 +43,7 @@ instance IsHeap Heap where
   isEmpty = (== Empty)
 
   insert :: Ord a => a -> Heap a -> Heap a
-  insert a h = one `merge` h
-   where
-    one = Node 1 a Empty Empty
+  insert a h = Node 1 a Empty Empty `merge` h
 
   merge :: Ord a => Heap a -> Heap a -> Heap a
   merge lhs Empty = lhs

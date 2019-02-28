@@ -11,6 +11,7 @@ module Concrete.Map.Unbalanced
 import Prelude
 
 import Abstract.Map (IsMap(..), fromFoldable)
+import Common.Show (showAsList)
 import Test.QuickCheck (Arbitrary(..))
 
 data Map k v = Empty | Node k v (Map k v) (Map k v)
@@ -20,12 +21,7 @@ instance (Ord k, Arbitrary k, Arbitrary v) => Arbitrary (Map k v) where
   arbitrary = fromFoldable @[] <$> arbitrary
 
 instance (Show k, Show v) => Show (Map k v) where
-  showsPrec d s =
-    showParen (d > appPrec)
-    $ showString "fromFoldable "
-    . showsPrec (appPrec + 1) (toList s)
-   where
-    appPrec = 10
+  showsPrec = showAsList "fromFoldable" toList
 
 instance Ord k => IsMap Map k v where
   empty :: Map k v

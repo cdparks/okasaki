@@ -11,6 +11,7 @@ module Concrete.Set.Unbalanced
 import Prelude
 
 import Abstract.Set (IsSet(..), fromFoldable)
+import Common.Show (showAsList)
 import Test.QuickCheck (Arbitrary(..))
 
 data Set a = Empty | Node a (Set a) (Set a)
@@ -20,12 +21,7 @@ instance (Ord a, Arbitrary a) => Arbitrary (Set a) where
   arbitrary = fromFoldable @[] <$> arbitrary
 
 instance Show a => Show (Set a) where
-  showsPrec d s =
-    showParen (d > appPrec)
-    $ showString "fromFoldable "
-    . showsPrec (appPrec + 1) (toList s)
-   where
-    appPrec = 10
+  showsPrec = showAsList "fromFoldable" toList
 
 instance Ord a => IsSet Set a where
   empty :: Set a
