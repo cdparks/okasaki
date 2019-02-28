@@ -3,7 +3,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeApplications #-}
 
-module Concrete.Map
+module Concrete.Map.Unbalanced
   ( Map(..)
   , toList
   ) where

@@ -3,7 +3,7 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeApplications #-}
 
-module Concrete.Set
+module Concrete.Set.Unbalanced
   ( Set(..)
   , toList
   ) where

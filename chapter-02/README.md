@@ -8,8 +8,8 @@ module Main where
 import Prelude
 
 import qualified Abstract.Set as Set
-import Concrete.Set (Set(..))
-import qualified Concrete.Set as Set
+import Concrete.Set.Unbalanced (Set(..))
+import qualified Concrete.Set.Unbalanced as Unbalanced
 import Control.Exception (Exception, catch, throwIO)
 import System.IO.Unsafe (unsafePerformIO)
 import Test.Hspec
@@ -226,11 +226,11 @@ generatesCompleteTree (NonNegative (Small d)) =
   -- Small isn't small enough :\
   d > 15 || numElements == 2 ^ d - 1
  where
-  numElements = length $ Set.toList $ complete d ()
+  numElements = length $ Unbalanced.toList $ complete d ()
 
 generatesSizedTree :: NonNegative (Small Int) -> Bool
 generatesSizedTree (NonNegative (Small n)) =
-  n == length (Set.toList $ balanced n ())
+  n == length (Unbalanced.toList $ balanced n ())
 
 -- TODO: a property for actually checking that the generated trees are
 -- balanced. I only eyeballed some samples

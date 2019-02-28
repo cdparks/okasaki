@@ -3,7 +3,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module Concrete.Stack
+module Concrete.Stack.List
   ( Stack(..)
   )
 where
