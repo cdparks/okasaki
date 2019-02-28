@@ -14,20 +14,18 @@ import Abstract.Map (IsMap(..), fromFoldable)
 import Test.QuickCheck (Arbitrary(..))
 
 data Map k v = Empty | Node k v (Map k v) (Map k v)
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord)
 
 instance (Ord k, Arbitrary k, Arbitrary v) => Arbitrary (Map k v) where
   arbitrary = fromFoldable @[] <$> arbitrary
 
-{-
-instance Show a => Show (Map a) where
+instance (Show k, Show v) => Show (Map k v) where
   showsPrec d s =
     showParen (d > appPrec)
     $ showString "fromFoldable "
     . showsPrec (appPrec + 1) (toList s)
    where
     appPrec = 10
--}
 
 instance Ord k => IsMap Map k v where
   empty :: Map k v

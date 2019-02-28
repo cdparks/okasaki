@@ -14,12 +14,11 @@ import Abstract.Set (IsSet(..), fromFoldable)
 import Test.QuickCheck (Arbitrary(..))
 
 data Set a = Empty | Node a (Set a) (Set a)
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord)
 
 instance (Ord a, Arbitrary a) => Arbitrary (Set a) where
   arbitrary = fromFoldable @[] <$> arbitrary
 
-{-
 instance Show a => Show (Set a) where
   showsPrec d s =
     showParen (d > appPrec)
@@ -27,7 +26,6 @@ instance Show a => Show (Set a) where
     . showsPrec (appPrec + 1) (toList s)
    where
     appPrec = 10
--}
 
 instance Ord a => IsSet Set a where
   empty :: Set a
