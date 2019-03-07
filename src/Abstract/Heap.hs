@@ -3,9 +3,12 @@
 module Abstract.Heap
   ( IsHeap(..)
   , fromFoldable
+  , toList
   ) where
 
 import Prelude
+
+import Data.List (unfoldr)
 
 class IsHeap t where
   empty :: Ord a => t a
@@ -17,3 +20,6 @@ class IsHeap t where
 
 fromFoldable :: forall f t a . (Foldable f, IsHeap t, Ord a) => f a -> t a
 fromFoldable = foldr insert empty
+
+toList :: forall t a . (IsHeap t, Ord a) => t a -> [a]
+toList = unfoldr step where step h = (,) <$> findMin h <*> deleteMin h

@@ -3,15 +3,14 @@
 
 module Concrete.Heap.Leftist
   ( Heap(..)
-  , toList
   , rank
   , mkNode
   ) where
 
 import Prelude
 
-import Abstract.Heap (IsHeap(..), fromFoldable)
-import Data.List (unfoldr)
+import Abstract.Heap (IsHeap(..), fromFoldable, toList)
+import Common.Show (showAsList)
 import Test.QuickCheck (Arbitrary(..))
 
 data Heap a
@@ -28,12 +27,7 @@ instance Ord a => Ord (Heap a) where
   lhs `compare` rhs = toList lhs `compare` toList rhs
 
 instance (Ord a, Show a) => Show (Heap a) where
-  showsPrec d s =
-    showParen (d > appPrec)
-    $ showString "fromFoldable "
-    . showsPrec (appPrec + 1) (toList s)
-   where
-    appPrec = 10
+  showsPrec = showAsList "fromFoldable" toList
 
 instance IsHeap Heap where
   empty :: Ord a => Heap a
@@ -71,6 +65,3 @@ mkNode a lhs rhs
  where
   leftRank = rank lhs
   rightRank = rank rhs
-
-toList :: Ord a => Heap a -> [a]
-toList = unfoldr step where step h = (,) <$> findMin h <*> deleteMin h
