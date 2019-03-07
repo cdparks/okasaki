@@ -10,8 +10,12 @@ import Prelude
 
 import Abstract.Heap (IsHeap)
 import qualified Abstract.Heap as Heap
+import Abstract.Set (IsSet)
+import qualified Abstract.Set as Set
 import qualified Concrete.Heap.Leftist as Leftist
 import qualified Concrete.Heap.Binomial as Binomial
+import qualified Concrete.Set.RedBlack as RB
+import Concrete.Set.RedBlack (Color(..))
 import Control.Applicative ((<|>))
 import Test.Hspec
 import Test.QuickCheck
@@ -30,7 +34,7 @@ Run `stack run chapter-03` to see test cases.
 > Prove that the right spine of a leftist heap of size _n_ contains at
 > most _floor(log₂(n + 1))_  elements
 
-**TODO**
+Nah
 
 ### Exercise 3.2
 
@@ -101,9 +105,45 @@ See `src/Concrete/Heap/ExplicitMin.hs`
 
 ### Exercise 3.8
 
+> Prove that the maximum depth of a node in red-black tree of size _n_
+> is at most _2×floor(log₂(n + 1))_
+
+Not today
+
 ### Exercise 3.9
 
+> Write `fromOrdList` to convert a sorted list with no duplicates into
+> a red-black tree. This should run in _O(n)_ time
+
+Eh, this looks like we're gonna have to split a list in the middle
+
 ### Exercise 3.10
+
+> Split `balance` into two functions `lbalance` and `rbalance` to
+> avoid unnecessary testing
+
+```haskell
+rbInsert :: Ord a => a -> RB.Set a -> RB.Set a
+rbInsert a s =
+  RB.Node RB.Black r lhs1 rhs1
+ where
+  RB.Node _ r lhs1 rhs1 = walk s
+  walk RB.Empty = RB.Node Red a RB.Empty RB.Empty
+  walk node@(RB.Node color x lhs0 rhs0)
+    | a < x = lbalance color x (walk lhs0) rhs0
+    | a > x = rbalance color x lhs0 (walk rhs0)
+    | otherwise = node
+
+lbalance :: Color -> a -> RB.Set a -> RB.Set a -> RB.Set a
+lbalance Black z (RB.Node Red y (RB.Node Red x a b) c) d = RB.Node Red y (RB.Node Black x a b) (RB.Node Black z c d)
+lbalance Black z (RB.Node Red x a (RB.Node Red y b c)) d = RB.Node Red y (RB.Node Black x a b) (RB.Node Black z c d)
+lbalance color x lhs rhs = RB.Node color x lhs rhs
+
+rbalance :: Color -> a -> RB.Set a -> RB.Set a -> RB.Set a
+rbalance Black x a (RB.Node Red z (RB.Node Red y b c) d) = RB.Node Red y (RB.Node Black x a b) (RB.Node Black z c d)
+rbalance Black x a (RB.Node Red y b (RB.Node Red z c d)) = RB.Node Red y (RB.Node Black x a b) (RB.Node Black z c d)
+rbalance color x lhs rhs = RB.Node color x lhs rhs
+```
 
 ## Appendix
 
@@ -134,6 +174,15 @@ behavesLikeHeapFindMin
   -> Bool
 behavesLikeHeapFindMin f h =
   f h == Heap.findMin h
+
+behavesLikeSetInsert
+  :: forall s a. (IsSet s a, Ord a, Eq (s a))
+  => (a -> s a -> s a)
+  -> a
+  -> s a
+  -> Bool
+behavesLikeSetInsert f element s =
+  f element s == Set.insert element s
 ```
 
 ### Main
@@ -141,13 +190,16 @@ behavesLikeHeapFindMin f h =
 ```haskell
 main :: IO ()
 main = hspec $ do
-  describe "Main.insert" $
+  describe "Optimized Leaftist Heap insert" $
     it "behaves like IsHeap.insert " $
       property (behavesLikeHeapInsert @Leftist.Heap @Int insert)
-  describe "Main.fromList" $
+  describe "Optimized Leftist Heap fromList" $
     it "behaves like IsHeap.fromFoldable" $
       property (behavesLikeHeapFromFoldable @[] @Leftist.Heap @Int fromList)
-  describe "Main.findMin" $
+  describe "Optimized Binomial Heap findMin" $
     it "behaves like IsHeap.findMin" $
       property (behavesLikeHeapFindMin @Binomial.Heap @Int findMin)
+  describe "Optimized Red-Black Set insert" $
+    it "behaves like IsSet.insert" $
+      property (behavesLikeSetInsert @RB.Set @Int rbInsert)
 ```
