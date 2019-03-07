@@ -49,6 +49,15 @@ executables:
       - hspec
       - markdown-unlit
 
+  chapter-04:
+    main: README.lhs
+    source-dirs: chapter-04
+    ghc-options: -pgmL markdown-unlit -threaded -O2 -with-rtsopts=-N
+    dependencies:
+      - okasaki
+      - hspec
+      - markdown-unlit
+
 tests:
   okasaki-test:
     main:                Spec.hs

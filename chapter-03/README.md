@@ -34,7 +34,7 @@ Run `stack run chapter-03` to see test cases.
 > Prove that the right spine of a leftist heap of size _n_ contains at
 > most _floor(log₂(n + 1))_  elements
 
-Nah
+_Skipped_
 
 ### Exercise 3.2
 
@@ -108,14 +108,14 @@ See `src/Concrete/Heap/ExplicitMin.hs`
 > Prove that the maximum depth of a node in red-black tree of size _n_
 > is at most _2×floor(log₂(n + 1))_
 
-Not today
+_Skipped_
 
 ### Exercise 3.9
 
 > Write `fromOrdList` to convert a sorted list with no duplicates into
 > a red-black tree. This should run in _O(n)_ time
 
-Eh, this looks like we're gonna have to split a list in the middle
+_Skipped_
 
 ### Exercise 3.10
 
