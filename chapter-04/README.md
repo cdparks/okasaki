@@ -77,10 +77,8 @@ insert x sorted@(Cons y ys)
   | otherwise = Cons y (insert x ys)
 
 insertionSort :: Ord a => Stream a -> Stream a
-insertionSort = loop Nil
- where
-  loop sorted Nil = sorted
-  loop sorted (Cons y ys) = loop (insert y sorted) ys
+insertionSort Nil = Nil
+insertionSort (Cons x xs) = insert x $ insertionSort xs
 ```
 
 ## Appendix

@@ -17,7 +17,7 @@ import Test.QuickCheck (Arbitrary(..))
 
 data Color = Red | Black
 
-data Set a = Empty | Node {-# UNPACK #-} !Color a (Set a) (Set a)
+data Set a = Empty | Node !Color a (Set a) (Set a)
 
 instance Eq a => Eq (Set a) where
   lhs == rhs = toList lhs == toList rhs
